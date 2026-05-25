@@ -3,6 +3,8 @@ package com.cohorte11.AerolineaAPI.controller;
 import com.cohorte11.AerolineaAPI.model.Vuelo;
 import com.cohorte11.AerolineaAPI.service.VueloService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,27 +21,32 @@ public class VueloController {
     }
 
     @GetMapping
-    public List<Vuelo> obtenerVuelos() {
-        return vueloService.findAll();
+    public ResponseEntity<List<Vuelo>> obtenerTodos() {
+        return ResponseEntity.ok(vueloService.findAll());
     }
-    //Retorna vuelo con ese ID
+
     @GetMapping("/{id}")
-    public Vuelo obtenerPorId(@PathVariable Long id) {
-        return vueloService.findById(id);
+    public ResponseEntity<Vuelo> obtenerPorId(@PathVariable Long id) {
+        Vuelo vuelo = vueloService.findById(id);
+        if (vuelo == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(vuelo);
     }
-    //Crea un vuelo nuevo
+
     @PostMapping
-    public Vuelo crear(@RequestBody Vuelo vuelo) {
-        return vueloService.save(vuelo);
+    public ResponseEntity<Vuelo> crear( @RequestBody Vuelo vuelo) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(vueloService.save(vuelo));
     }
-    //Actualiza un vuelo existente
+
     @PutMapping("/{id}")
-    public Vuelo actualizar(@PathVariable Long id, @RequestBody Vuelo datos) {
-        return vueloService.update(id, datos);
+    public ResponseEntity<Vuelo> actualizar(@PathVariable Long id, @RequestBody Vuelo datos) {
+        Vuelo resultado = vueloService.update(id, datos);
+        if (resultado == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(resultado);
     }
-    //Elimina un vuelo por ID
+
     @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         vueloService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
