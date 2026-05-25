@@ -1,6 +1,8 @@
 package com.cohorte11.AerolineaAPI.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "pasajeros") //Defino el nombre de la tabla
@@ -9,12 +11,20 @@ public class Pasajero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "El nombre no puede estar vacío")
     @Column(nullable = false)
     private String nombre;
+
+    @NotBlank(message = "El apellido no puede estar vacío")
     @Column(nullable = false)
     private String apellido;
+
+    @NotBlank(message = "El documento es obligatorio")
     @Column(nullable = false)
     private String documento;
+
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "El email no tiene un formato válido")
     @Column(nullable = false)
     private String email;
 
